@@ -12,9 +12,9 @@ class Program
         string userInput = Console.ReadLine();
         int withdrawAmount = int.Parse(userInput);
 
-        int[] denomination = { 100, 50, 10};
+        int[] notes = { 100, 50, 10};
         
-        var atm = new AtmCore(denomination);
+        var atm = new AtmCore(notes);
             
         var withdrawOdds = atm.GetAllWithdrawOdds(withdrawAmount);
         

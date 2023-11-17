@@ -4,15 +4,15 @@ namespace ATM.Application;
 
 public class AtmCore
 {
-    public int[] Denominations { get; }
+    public int[] Notes { get; }
 
-    private readonly int[] _denominationLimits;
+    private readonly int[] _notesLimits;
 
-    public AtmCore(int[] denominations)
+    public AtmCore(int[] notes)
     {
-        Denominations = denominations;
+        Notes = notes;
         
-        _denominationLimits = new int[denominations.Length];
+        _notesLimits = new int[notes.Length];
         ResetLimits();
     }
     
@@ -20,40 +20,39 @@ public class AtmCore
     {
         int remainingAmount = withdrawAmount;
 
-        int[] denominationsAmount = new int[Denominations.Length];
+        int[] notesAmount = new int[Notes.Length];
 
-        for (int i = 0; i < Denominations.Length; i++)
+        for (int i = 0; i < Notes.Length; i++)
         {
-            if (_denominationLimits[i] == 0) //Indicates that this slot should not be used
+            if (_notesLimits[i] == 0) //Indicates that this slot should not be used
                 continue;
             
-            int cash = Denominations[i];
+            int cash = Notes[i];
             
             int cashAmount = remainingAmount / cash;
             
-            //if (_denominationLimits[i] > 0)
-            cashAmount = Math.Min(_denominationLimits[i], cashAmount);
+            cashAmount = Math.Min(_notesLimits[i], cashAmount);
                 
             remainingAmount -= cashAmount * cash;
 
-            denominationsAmount[i] = cashAmount;
+            notesAmount[i] = cashAmount;
         }
 
         if (remainingAmount > 0)
             return new int[] {};
             
-        return denominationsAmount;
+        return notesAmount;
 
     }
     
-    public void ResetLimits() => Array.Fill(_denominationLimits, int.MaxValue);
+    public void ResetLimits() => Array.Fill(_notesLimits, int.MaxValue);
 
     private void SetCurrentLimits(int[] combination, int currentNota)
     {
         for (int y = 0; y <= currentNota; y++)
         {
             if (combination[y] > 0)
-                _denominationLimits[y] = combination[y] - 1;
+                _notesLimits[y] = combination[y] - 1;
         } 
     }
     
@@ -75,7 +74,7 @@ public class AtmCore
             
             SetCurrentLimits(currentComb, j);
 
-        } while (currentComb.Length > 0 && currentComb[j] > 0 && j < Denominations.Length - 1);
+        } while (currentComb.Length > 0 && currentComb[j] > 0 && j < Notes.Length - 1);
         
         return combinations;
     }
@@ -100,7 +99,7 @@ public class AtmCore
                     if (printed)
                         result.Append(" + ");
 
-                    result.Append($"{combination[x]} x {Denominations[x]} EUR");
+                    result.Append($"{combination[x]} x {Notes[x]} EUR");
                     printed = true;
                 }
                         
